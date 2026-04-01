@@ -4,7 +4,6 @@ import { buildPrompt } from "../prompts/study-prompt";
 
 export async function callGemini(text: string, difficulty: string, questionCount: number) {
   const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-  console.log("api key ", apiKey);
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY NOT SET");
   }
