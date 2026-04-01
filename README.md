@@ -1,129 +1,183 @@
-# StudySnap ✨
+# AI-Enhanced Legal Aid Platform for First-Generation Litigants
 
-AI-powered study guides and practice quizzes generated in seconds.
+## Project Title & Team Details
+**Project:** AI-Enhanced Legal Aid Platform for First-Generation Litigants  
+**Team Members:**  
+1. Swayam Garg  
+2. Yuvraj Pandiya  
+3. Ajay Sahani  
+4. Nikhil Singh Rajput  
 
----
+## Problem Statement Overview
+**Selected Problem:** WD-04  
+**Core Solution Approach:**  
+We are building a comprehensive legal aid web platform designed specifically for first-generation litigants who lack basic legal knowledge. 
+- **Legal Situation Selector:** Users can select from categorized life events (e.g., landlord disputes, consumer complaints, workplace harassment, FIR filing).
+- **Plain-Language Explanations:** The platform translates complex legal jargon and rights into simple, easy-to-understand terms tailored to the user's specific situation.
+- **Actionable Guidance:** It lists relevant laws, generates a customized document checklist, and explains the necessary step-by-step procedures. 
+- **Pro Bono Connection:** A legal aid directory seamlessly connects users with verified pro bono lawyers filtered by geographic location.
+- **Automated Document Generation:** Finally, a built-in document template generator assists by producing properly formatted and filled-in complaint letters, RTIs, and legal notices automatically.
 
-## 1. Project Overview & Identity
-
-**Team StudySnap:**
-- Swayam Garg
-- [Team Member 2]
-- [Team Member 3]
-
-### Problem Statement
-**Focus: WD-04 / FT-02 (Personalized Education & Knowledge Synthesis)**
-
-Students and professionals often face "information overload" when processing long lecture notes, research papers, or textbooks. There is a lack of efficient, automated tools to synthesize this information into bite-sized summaries and self-assessment tools without requiring manual effort. StudySnap solves this by leveraging LLMs to instantly transform raw text into organized study materials.
-
-### Methodology/Approach
-Our approach focuses on **Knowledge Extraction & Active Recall**:
-- **Why LLMs?** We use the Gemini 1.5 Flash model for its large context window and high-speed inference, making it ideal for processing long study documents.
-- **Why Active Recall?** Scientific research shows that testing yourself (quizzing) is more effective than passive reading. StudySnap automates quiz generation to foster this learning pattern.
-- **Design Pattern:** We implemented a modular component-based architecture for the frontend and a stateless RESTful API on the backend for scalability.
-
----
-
-## 2. Technical Architecture & Documentation
+## Technical Architecture & Documentation (+3 Bonus Points Criteria)
 
 ### Architecture Diagram
 ```mermaid
 graph TD
-    Client[Next.js Frontend] <--> API[Next.js API Routes]
-    API <--> Gemini[Google Gemini AI API]
-    API <--> Middleware[CORS & Rate Limiter]
-    Client --> PDF[html2pdf.js / Client-side Export]
+    UI[Frontend: React/Next.js UI]
+    Gateway[API Gateway / Next.js API Routes]
+    Auth[Authentication Service: Clerk/NextAuth]
+    DB[(Database: PostgreSQL / Supabase)]
+    AI[AI Engine: Google Gemini]
+    Storage[File Storage/AWS S3]
+
+    UI --> |Requests| Gateway
+    Gateway --> |Validate Token| Auth
+    Gateway --> |CRUD Operations| DB
+    Gateway --> |Prompt Inject| AI
+    Gateway --> |Document Templates| Storage
+    AI --> |Simplified Legal Text| Gateway
+    Storage --> |PDF Output| UI
+    DB --> |Pro Bono Directory| Gateway
 ```
 
-### User Flow Diagram
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant F as Frontend
-    participant B as Backend
-    participant AI as Gemini AI
+### System Workflow/User Flow
+*(Eraser Prompt)*
+```eraser
+// User Flow structure for Eraser.io
 
-    U->>F: Paste Text/Upload PDF
-    F->>B: POST /api/generate
-    B->>AI: Build & Send Optimized Prompt
-    AI-->>B: Return structured JSON
-    B-->>F: Sanitized & Validated JSON
-    F->>U: Display Summary, Quiz & Terms
-    U->>F: Practice Quiz / Download PDF
+User [icon: user] > "Lands on Homepage" 
+"Lands on Homepage" > "Legal Situation Selector" [icon: layout]
+"Legal Situation Selector" > "Selects Issue (e.g. Landlord Dispute)"
+
+"Selects Issue (e.g. Landlord Dispute)" > "AI Translates Jargon" [icon: cpu]
+"AI Translates Jargon" > "Displays Plain-Language Rights & Laws" [icon: book-open]
+"Displays Plain-Language Rights & Laws" > "Generates Step-by-Step Procedure & Checklist" [icon: check-square]
+
+"Generates Step-by-Step Procedure & Checklist" > "Two Action Paths"
+"Two Action Paths" > "Path A: Document Template Generator" [icon: file-text]
+"Two Action Paths" > "Path B: Pro Bono Lawyer Directory" [icon: users]
+
+"Path A: Document Template Generator" > "User fills simple form"
+"User fills simple form" > "Auto-generates filled Complaint/RTI PDF" [icon: download]
+
+"Path B: Pro Bono Lawyer Directory" > "Filters by User Location" [icon: map-pin]
+"Filters by User Location" > "Displays Contact Details of Pro Bono Lawyers"
 ```
 
-### Database Schema (ERD)
-*Note: Current version of StudySnap is stateless to prioritize speed and user privacy. No user data is stored persistently.*
-
-- **Data Structure (Session State):**
-  - `inputText`: String (up to 4,000 words)
-  - `difficulty`: Enum ("Easy", "Medium", "Hard")
-  - `StudyResult`: Object { summary: string, key_terms: Array, quiz: Array }
-
-### Logic Explanations
-**Prompt Injection Prevention & Formatting:**
-We use a **System Prompting** technique to ensure the AI output is always valid JSON. 
-Logic: 
-1. Word count validation: `inputText.split(/\s+/).length <= 4000`.
-2. Markdown Stripping: `response.replace(/^```json/, '').replace(/```$/, '')` to ensure `JSON.parse()` success.
-
----
-
-## 3. Setup & Installation Instructions
+## Setup and Installation Instructions
 
 ### Installation Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Swayam7Garg/Study-Snap.git
-   cd Study-Snap
+   git clone https://github.com/Swayam7Garg/Legal-Aid-Platform.git
+   cd Legal-Aid-Platform
    ```
 2. Install dependencies:
    ```bash
    npm install
    ```
-3. Copy the environment template:
-   ```bash
-   cp .env.example .env.local
-   ```
-4. Start the development server:
+3. Set up the environment variables (see below).
+4. Run the development server:
    ```bash
    npm run dev
    ```
 
-### Environment Configuration
-- `GEMINI_API_KEY`: Your API key from [Google AI Studio](https://aistudio.google.com/).
-
-### Folder Structure
+### Folder Structure Explanation
 ```bash
-├── app/              # Next.js App Router (Pages & API)
-│   ├── api/          # Backend API endpoints
-│   └── globals.css   # Tailwind configuration
-├── components/       # Reusable UI components (Quiz, Summary, etc.)
-├── lib/              # Core logic & AI initialization
-├── prompts/          # Documented Prompt Templates
-├── public/           # Static assets & screenshots
-└── middleware.ts     # CORS & Rate limiting
+├── app/                  # Next.js App Router (Pages for routing)
+│   ├── api/              # Backend serverless REST APIs
+│   └── (routes)          # Frontend pages (home, selector, directories)
+├── components/           # Reusable UI components (Forms, Cards, Modal)
+├── lib/                  # Shared utility functions and database connections
+├── models/               # Database ORM models/schemas
+├── public/               # Static assets, fonts, and base document templates
+└── .env.example          # Environment variable template
 ```
 
----
+### Environment Variables
+`.env.example`
+```env
+# Database
+DATABASE_URL="postgres://user:pass@host/dbname"
 
-## 4. Domain-Specific Requirements (AI/ML)
+# Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
+CLERK_SECRET_KEY="sk_test_..."
 
-### Model Card
-- **Model Used:** `gemini-1.5-flash-latest`
-- **Provider:** Google Generative AI
-- **Temperature:** 0.3 (Optimized for balance between creativity and accuracy)
-- **TopK / TopP:** 1 / 0.95
+# AI APIs
+GEMINI_API_KEY="AIzaSy..."
 
-### Documented Prompt Template
-Located in `prompts/study-prompt.ts`.
-> "Act as an expert study assistant. Your task is to analyze the provided text and generate a structured study guide... Return ONLY a raw JSON object."
+# Other Services
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
 
----
+## Live Demo & Assets
 
-## Team Credits & Responsibility
-- **Swayam Garg**: [Lead Developer / Backend & Prompt Engineering]
+**Live Working Demo Link:**  
+<!-- Insert Link Here -->
 
-## Screenshots
-![Dashboard](dashboard-screenshot.png)
-![Quiz Interface](quiz-screenshot.png)
+**Screenshots/Screen Recording:**
+<!-- Insert Screenshots Here -->
+
+
+**Sample Test Inputs:**
+- **Situation:** "My landlord is not returning my security deposit after 3 months."
+- **Location Filter:** "New Delhi, India"
+- **Document Generation Input:** 
+  - Tenant Name: "Ravi Kumar"
+  - Landlord Name: "Sunil Sharma"
+  - Deposit Amount: "₹50,000"
+  - Address: "Flat 4B, Sector 12, Dwarka"
+
+## Domain-Specific Requirements
+
+### Database Schema (ERD) & Role-Based Access Logic
+```mermaid
+erDiagram
+    USERS ||--o{ CASES : files
+    USERS ||--o{ DOCUMENTS : generates
+    LAWYERS ||--o{ CASES : consults
+
+    USERS {
+        uuid id
+        string name
+        string email
+        string role "USER or ADMIN"
+    }
+    LAWYERS {
+        uuid id
+        string name
+        string location
+        string expertise
+        boolean pro_bono
+    }
+    CASES {
+        uuid id
+        uuid user_id
+        string category
+        string description
+        string status
+    }
+    DOCUMENTS {
+        uuid id
+        uuid user_id
+        string doc_type
+        date generated_at
+    }
+```
+**Role-Based Access Logic:**
+- **Unregistered Users**: Can browse basic legal rights and access the legal situation selector.
+- **Registered Users (Litigants)**: Can generate document templates, save their checklists, and view complete lawyer contact info.
+- **Lawyers**: Have a verified profile dashboard to manage their availability and list the types of pro bono cases they accept.
+- **Admins**: Can approve/verify lawyer accounts to ensure legitimacy and moderate public templates.
+
+## Technical Ethics & Transparency
+
+### AI Usage Declaration
+**Declaration:** We utilized LLMs (Google Gemini) within the application for natural language processing, specifically to translate complex legal jargon into plain language. During the development process, GitHub Copilot was used to accelerate boilerplate code generation and optimize frontend styling. ChatGPT was referenced for architectural planning and debugging TypeScript errors.  
+**Justification:** The AI translation within the app is strictly bounded by pre-defined system prompts to ensure it does NOT provide legal advice, but rather translates established facts. Copilot/ChatGPT were used securely without exposing sensitive proprietary data.
+
+### Data Sources
+1. **IndiaCode (Legislative Department):** Used to retrieve standard statutes and acts (e.g., Consumer Protection Act 2019, Rent Control Act).
+2. **Open Data Portal (data.gov.in):** Used for geographic location scraping.
+3. **Synthetic Data:** Yes, we extensively used synthetic data (fictional names, addresses, and hypothetical legal disputes) for populating the database and testing the platform without violating real user privacy.
