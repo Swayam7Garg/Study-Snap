@@ -27,13 +27,13 @@ export default function DownloadButton() {
       const element = document.getElementById("pdf-export");
       if (!element) throw new Error("Export container not found");
 
-      const opt = {
+      const opt: any = {
         margin: [0.4, 0.5, 0.4, 0.5],
         filename: `StudySnap_${new Date().toISOString().slice(0, 10)}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-      } as const;
+      };
 
       await html2pdf().set(opt).from(element).save();
 
