@@ -2,32 +2,142 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
+  --bg-primary: #080b14;
+  --bg-card: #0f172a;
+  --violet-glow: rgba(109, 40, 217, 0.35);
+  --teal-glow: rgba(20, 184, 166, 0.2);
 }
 
 @layer base {
   body {
-    @apply text-slate-100 bg-slate-900;
+    @apply text-slate-100 font-sans;
+    background-color: var(--bg-primary);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(109, 40, 217, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(20, 184, 166, 0.12) 0%, transparent 60%);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
   }
 }
 
-/* Custom scrollbar for better look */
+/* ─── Animated gradient orbs in background ─── */
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.97); }
+}
+
+.bg-orb {
+  position: fixed;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: orb-float 12s ease-in-out infinite;
+  z-index: 0;
+}
+
+/* ─── Shimmer loading skeleton ─── */
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ─── Pulse glow ─── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(109, 40, 217, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(109, 40, 217, 0.6), 0 0 60px rgba(109, 40, 217, 0.2); }
+}
+
+.glow-pulse {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* ─── Tab underline slide ─── */
+@keyframes slide-in-up {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.tab-content-enter {
+  animation: slide-in-up 0.35s ease-out forwards;
+}
+
+/* ─── Confetti burst (keyframe stubs used by canvas) ─── */
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotateZ(0deg); opacity: 1; }
+  100% { transform: translateY(600px) rotateZ(720deg); opacity: 0; }
+}
+
+/* ─── Custom scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #0f172a; /* Custom background */
+  background: #0f172a;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #334155; /* Custom thumb */
+  background: #334155;
   border-radius: 10px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #6d28d9;
+}
+
+/* ─── Range input styling ─── */
+input[type='range'] {
+  accent-color: #7c3aed;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #7c3aed;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+input[type='range']::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.8);
+}
+
+/* ─── Floating label textarea ─── */
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5), 0 0 20px rgba(124, 58, 237, 0.15);
+}
+
+/* ─── 3D card flip utility ─── */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+}
+.flip-card-back {
+  transform: rotateY(180deg);
 }
