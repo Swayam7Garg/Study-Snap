@@ -3,12 +3,12 @@ import { GoogleGenAI } from "@google/genai";
 import { buildPrompt } from "../prompts/study-prompt";
 
 export async function callGemini(text: string, difficulty: string, questionCount: number) {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY NOT SET");
   }
 
-  const ai = new GoogleGenAI({ apiKey: "AIzaSyDJO7JvOcJT7zZdsPhWfbjJWws54-PJ9k0" });
+  const ai = new GoogleGenAI({ apiKey });
   try {
 
     const prompt = buildPrompt(text, difficulty, questionCount);
