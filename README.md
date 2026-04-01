@@ -40,25 +40,25 @@ graph TD
 ```
 
 ### System Workflow/User Flow
-*(Eraser Prompt)*
-```eraser
-// User Flow structure for Eraser.io
+```mermaid
+sequenceDiagram
+    actor Student
+    participant UI as Frontend (Next.js)
+    participant API as Backend API
+    participant AI as Google Gemini
+    participant PDF as PDF Generator (html2pdf)
 
-Student [icon: user] > "Lands on Study Snap" [icon: layout]
-"Lands on Study Snap" > "Uploads PDF or Pastes Text" [icon: file-text]
-"Uploads PDF or Pastes Text" > "Selects Difficulty (Easy/Med/Hard) & Q-Count" [icon: settings]
-"Selects Difficulty (Easy/Med/Hard) & Q-Count" > "Backend formats prompt & calls Gemini API" [icon: cpu]
-
-"Backend formats prompt & calls Gemini API" > "Receives Structured JSON Payload" [icon: code]
-"Receives Structured JSON Payload" > "Renders Data on UI Dashboard" [icon: monitor]
-
-"Renders Data on UI Dashboard" > "Views Topic Summary" [icon: list]
-"Renders Data on UI Dashboard" > "Views Key Terms" [icon: tag]
-"Renders Data on UI Dashboard" > "Takes Interactive Quiz" [icon: check-circle]
-
-"Views Topic Summary" > "Clicks 'Download PDF'" [icon: download]
-"Takes Interactive Quiz" > "Clicks 'Download PDF'"
-"Clicks 'Download PDF'" > "html2pdf.js generates offline Revision Sheet" [icon: file-text]
+    Student->>UI: Uploads PDF or Pastes Text
+    Student->>UI: Configures Quiz (Difficulty, Count)
+    UI->>API: Sends Text + Configuration
+    API->>AI: Dispatches Crafted Prompt
+    AI-->>API: Returns Unified JSON
+    API-->>UI: Validates & Forwards Data
+    UI-->>Student: Displays Summary, Key Terms, Quiz
+    Student->>UI: Practices Quiz & Reviews
+    Student->>UI: "Download PDF" Action
+    UI->>PDF: Aggregates DOM Elements
+    PDF-->>Student: Saves Offline Study Guide (.pdf)
 ```
 
 ## Setup and Installation Instructions
